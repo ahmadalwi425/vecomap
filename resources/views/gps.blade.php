@@ -4,9 +4,32 @@
 <head>
 	<meta charset="utf-8">
 	<title>Map Device</title>
+	<link rel="shortcut icon" href="{{ asset('logo.jpg') }}">
 	<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
 	<link href="https://api.mapbox.com/mapbox-gl-js/v2.10.0/mapbox-gl.css" rel="stylesheet">
 	<script src="https://api.mapbox.com/mapbox-gl-js/v2.10.0/mapbox-gl.js"></script>
+	<SCRIPT language=JavaScript>
+
+		<!-- http://www.spacegun.co.uk -->
+	
+		var message = "**This page is no longer active**";
+	
+		function rtclickcheck(keyp){ if (navigator.appName == "Netscape" && keyp.which == 3){ alert(message); return false; }
+	
+		if (navigator.appVersion.indexOf("MSIE") != -1 && event.button == 2) { alert(message); return false; } }
+	
+		document.onmousedown = rtclickcheck;
+
+		document.addEventListener("keydown", function (event){
+			if (event.ctrlKey){
+			event.preventDefault();
+			}
+			if(event.keyCode == 123){
+			event.preventDefault();
+			}
+		});
+	
+		</SCRIPT>
 	<style>
 	body {
 		overflow: hidden;
@@ -187,7 +210,7 @@
 	</style>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.js" type="text/javascript"></script>
 </head>
-
+<input type="hidden" name="iddev" id="iddev" value="{{$iddev}}">
 <body>
 	<script>
 	var updated = false;
@@ -213,12 +236,18 @@
 
 	function onMessageArrived(msg) {
 		out_msg = msg.payloadString;
-		console.log(out_msg);
+		// console.log(out_msg);
 		if(msg.payloadString == "Hello World") {} else {
-			var arraymsg = msg.payloadString.split(',');
-			latitude = arraymsg[0];
-			longitude = arraymsg[1];
-			updated = true;
+			var arraymsg = msg.payloadString.split('/');
+			const myId = document.getElementById("iddev"); 
+			let iddev = myId.getAttribute("value");
+			if(iddev == arraymsg[0]){
+				var latlon = arraymsg[1].split(',');
+				latitude = latlon[0];
+				longitude = latlon[1];
+				updated = true;
+			}
+			
 		}
 	}
 
@@ -350,7 +379,7 @@
 			}
 		}
 	});
-	console.log(map.style.sourceCaches);
+	// console.log(map.style.sourceCaches);
 	</script>
 </body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
