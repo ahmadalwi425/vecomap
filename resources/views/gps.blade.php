@@ -212,80 +212,15 @@
 </head>
 <input type="hidden" name="iddev" id="iddev" value="{{$iddev}}">
 <body>
-	<script>
-	var updated = false;
-	var latitude = 0;
-	var longitude = 0;
-	var status = false;
-	var mqtt;
-	var reconnectTimeout = 2000;
-	var host = "140.238.201.233"; //change this
-	// var host="test.mosquitto.org";
-	// var host="localhost";//change this
-	// var host="pi2.local"; //change this
-	//var host="ws6.local";//change this
-	//var host="iot.eclipse.org"
-	//var port=80
-	// var port=8083;
-	var port = 8090;
-
-	function onFailure(message) {
-		console.log("Connection Attempt to Host " + host + "Failed");
-		setTimeout(MQTTconnect, reconnectTimeout);
-	}
-
-	function onMessageArrived(msg) {
-		out_msg = msg.payloadString;
-		// console.log(out_msg);
-		if(msg.payloadString == "Hello World") {} else {
-			var arraymsg = msg.payloadString.split('/');
-			const myId = document.getElementById("iddev"); 
-			let iddev = myId.getAttribute("value");
-			if(iddev == arraymsg[0]){
-				var latlon = arraymsg[1].split(',');
-				latitude = latlon[0];
-				longitude = latlon[1];
-				updated = true;
-			}
-			
-		}
-	}
-
-	function onConnect() {
-		// Once a connection has been made, make a subscription and send a message.
-		// console.log("Connected ");
-		mqtt.subscribe("veco/vecov1/gps");
-		// message = new Paho.MQTT.Message("6.234234,0.12323");
-		// message.destinationName = "sensor2";
-		// message.retained=true;
-		// mqtt.send(message);
-	}
-
-	function MQTTconnect() {
-		// console.log("connecting to "+ host +" "+ port);
-		var x = Math.floor(Math.random() * 10000);
-		var cname = "orderform-" + x;
-		mqtt = new Paho.MQTT.Client(host, port, cname);
-		//document.write("connecting to "+ host);
-		var options = {
-			timeout: 3,
-			onSuccess: onConnect,
-			onFailure: onFailure,
-			userName: "admin_veco",
-			password: "@veco147"
-		};
-		mqtt.onMessageArrived = onMessageArrived
-		mqtt.connect(options); //connect
-	}
-	</script>
+	<script src="{{asset('js/js1.js')}}"></script>
 	<script>
 	MQTTconnect();
 	</script>
 	<div id="map"></div>
-	<button id="overlay1" class="btn">
+	<button id="overlay1" class="btn" onclick="buka();">
 		<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-unlock-fill" viewBox="0 0 16 16">
 			<path d="M11 1a2 2 0 0 0-2 2v4a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h5V3a3 3 0 0 1 6 0v4a.5.5 0 0 1-1 0V3a2 2 0 0 0-2-2z" /> </svg> Buka Device</button>
-	<button id="overlay2" class="btn">
+	<button id="overlay2" class="btn" onclick="kunci();">
 		<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lock-fill" viewBox="0 0 16 16">
 			<path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z" /> </svg> Kunci Device</button>
 	<div id="waiting" class="loading-box-container">
@@ -295,6 +230,7 @@
 	</div>
 	<button id="overlay3" onclick="location.href='{{ url('logout') }}';" class="btn"> Logout</button>
 	<script>
+
 	function removeWait() {
 		$("#waiting").fadeOut(500, function() {
 			// fadeOut complete. Remove the loading div

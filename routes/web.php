@@ -20,9 +20,9 @@ Route::get('/login', function () {
 Route::post('login', [App\Http\Controllers\CustomAuthController::class, 'tesLogin'])->name('login');
 
 Route::group(['middleware' => ['authed']], function () {
-    // Route::get('/', function () {
-    //     return view('welcome');
-    // });
+    Route::get('/', function () {
+        return view('welcome');
+    });
     // Route::get('cekAuth', [App\Http\Controllers\CustomAuthController::class, 'openAuth']);
     Route::get('gps', [App\Http\Controllers\gpsController::class, 'gps']);
     Route::get('logout', [App\Http\Controllers\CustomAuthController::class, 'logout']);
